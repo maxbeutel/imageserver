@@ -19,13 +19,6 @@
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
 
-class ImageRequest {
- public:
-  ImageRequest() {
-    printf("Hallo welt");
-  }
-};
-
 enum URI_TO_PATH_STATUS {
   EMPTY = -1,
   SUCCESS = 0,

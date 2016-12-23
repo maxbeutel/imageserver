@@ -3,23 +3,21 @@ project(ImageServer)
 cmake_minimum_required(VERSION 3.1)
 
 MESSAGE("LIBEVENT_HOME: " ${LIBEVENT_HOME})
-# MESSAGE("GTEST_HOME: " ${GTEST_HOME})
+MESSAGE("GTEST_HOME: " ${GTEST_HOME})
 
 include_directories("${LIBEVENT_HOME}/include")
-# include_directories("${GTEST_HOME}/googletest/include")
-# include_directories("${GTEST_HOME}/googlemock/include")
+include_directories("${GTEST_HOME}/googletest/include")
+include_directories("${GTEST_HOME}/googlemock/include")
 
 link_directories("${LIBEVENT_HOME}/.libs")
-# link_directories("${GTEST_HOME}/build/googlemock/gtest")
-# link_directories("${GTEST_HOME}/build/googlemock")
+link_directories("${GTEST_HOME}/build/googlemock/gtest")
+link_directories("${GTEST_HOME}/build/googlemock")
 
 # build settings
 include(CTest)
 
-if(UNIX)
-    set(CTEST_MEMORYCHECK_COMMAND, "valgrind")
-    set(CTEST_MEMORYCHECK_COMMAND_OPTIONS, "--trace-children=yes --leak-check=full")
-endif()
+set(CTEST_MEMORYCHECK_COMMAND, "valgrind")
+set(CTEST_MEMORYCHECK_COMMAND_OPTIONS, "--trace-children=yes --leak-check=full")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
@@ -28,53 +26,36 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic")
 
 # server
 add_executable(server src/server.cpp)
-target_link_libraries(server event_custom)
+target_link_libraries(server event_custom) # @FIXME this should be passed in via variable?
 
-# # client util lib
-# set(libUtilSources
-#     src/hazelcast_c_client/util/string.cpp
-#     src/hazelcast_c_client/util/errorhandling.cpp
-# )
+# server helper module (@FIXME not used in server yet!)
+set(libServerHelperSources
+    src/ServerHelper.cpp
+)
 
-# add_library(hazelcastCClientUtil SHARED ${libUtilSources})
+add_library(server_helper SHARED ${libServerHelperSources})
+target_link_libraries(server_helper event_custom) # @FIXME this should be passed in via variable?
 
-# # client lib
-# set(libSources
-#     src/hazelcast_c_client/client/client_c_api.cpp
-#     src/hazelcast_c_client/map/RawDataIMapImpl.hpp
-#     src/hazelcast_c_client/map/map_c_api.cpp
-#     src/hazelcast_c_client/serialization/serialization_c_api.cpp
-# )
+# image module related stuff
+set(libImageSources
+    src/ImageRequest.cpp
+    src/ImageService.cpp
+)
 
-# add_library(hazelcastCClient SHARED ${libSources})
+add_library(image SHARED ${libImageSources})
 
-# target_link_libraries(hazelcastCClient pthread)
-# target_link_libraries(hazelcastCClient ${HAZELCAST_CPP_CLIENT_LIB})
-# target_link_libraries(hazelcastCClient hazelcastCClientUtil)
+# test - server helper module
+add_executable(server_helper_test tests/server_helper_test.cpp)
+add_test(server_helper_test server_helper_test)
 
-# # test - map API
-# add_executable(hazelcast_map_api_test test/hazelcast_map_api_test.cpp)
-# add_test(hazelcast_map_api_test hazelcast_map_api_test)
+target_link_libraries(server_helper_test server_helper)
+target_link_libraries(server_helper_test gmock)
+target_link_libraries(server_helper_test gtest)
 
-# target_link_libraries(hazelcast_map_api_test hazelcastCClient)
-# target_link_libraries(hazelcast_map_api_test pthread)
-# target_link_libraries(hazelcast_map_api_test gmock)
-# target_link_libraries(hazelcast_map_api_test gtest)
+# test - image module
+add_executable(image_test tests/image_test.cpp)
+add_test(image_test image_test)
 
-# # test - serialization
-# add_executable(hazelcast_serialization_test test/hazelcast_serialization_test.cpp)
-# add_test(hazelcast_serialization_test hazelcast_serialization_test)
-
-# target_link_libraries(hazelcast_serialization_test hazelcastCClient)
-# target_link_libraries(hazelcast_serialization_test pthread)
-# target_link_libraries(hazelcast_serialization_test gmock)
-# target_link_libraries(hazelcast_serialization_test gtest)
-
-# # test - util
-# add_executable(hazelcast_util_test test/hazelcast_util_test.cpp)
-# add_test(hazelcast_util_test hazelcast_util_test)
-
-# target_link_libraries(hazelcast_util_test hazelcastCClientUtil)
-# target_link_libraries(hazelcast_util_test pthread)
-# target_link_libraries(hazelcast_util_test gmock)
-# target_link_libraries(hazelcast_util_test gtest)
+target_link_libraries(image_test image)
+target_link_libraries(image_test gmock)
+target_link_libraries(image_test gtest)
