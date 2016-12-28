@@ -11,4 +11,5 @@ class ImageService {
  public:
   ImageService();
   void resizeImage(std::unique_ptr<SourceImageFile> sourceImageFile, ImageSize imageSize) const;
+  void cropImage(std::unique_ptr<SourceImageFile> sourceImageFile, ImageSize imageSize) const;
 };

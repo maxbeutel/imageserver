@@ -47,6 +47,17 @@ TEST(ImageService, resizeImage) {
                                          );
 }
 
+TEST(ImageService, cropImage) {
+  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
+
+  const ImageService imageService;
+
+  imageService.cropImage(
+      std::move(sourceImageFileResult.first),
+      std::make_pair(100, 100)
+                                         );
+}
+
 GTEST_API_ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
 
