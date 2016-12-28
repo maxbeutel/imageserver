@@ -1,3 +1,4 @@
+#include <utility>
 #include <stdio.h>
 #include <stdexcept>
 
@@ -8,52 +9,41 @@
 
 // @TODO make this fixtures
 // @TODO this testsuite doesn't work with valgrind, it hangs
-const std::string TEST_IMAGE_FULL_PATH("/Users/max/Desktop/z1.jpg");
+const std::string TEST_IMAGE_ABSOLUTE_PATH("/Users/max/Desktop/z1.jpg");
 const std::string TEST_IMAGE_BASE_DIRECTORY("/Users/max/Desktop");
-const std::string TEST_IMAGE_PATH("z1.jpg");
+const std::string TEST_IMAGE_RELATIVE_PATH("z1.jpg");
 
-// TEST(SourceImageFile, Constructor) {
-//   const SourceImageFile sourceImageFile(TEST_IMAGE_FULL_PATH);
+TEST(SourceImageFile, resolveWithinBaseDirectory) {
+  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TEST_IMAGE_BASE_DIRECTORY, TEST_IMAGE_RELATIVE_PATH);
 
-//   auto fullPath = sourceImageFile.getFullPath();
-//   ASSERT_STREQ(fullPath.c_str(), TEST_IMAGE_FULL_PATH.c_str());
-// }
+  const auto sourceImageFile = std::move(sourceImageFileResult.first);
+  const auto status = sourceImageFileResult.second;
 
-// TEST(ImageService, resolvePathToSourceImageFile) {
-//   const ImageService imageService;
+  ASSERT_EQ(SOURCE_IMAGE_FILE_RESOLVE_STATUS::SUCCESS, status);
+  ASSERT_STREQ(sourceImageFile->getFullPath().c_str(), TEST_IMAGE_ABSOLUTE_PATH.c_str());
+}
 
-//   auto sourceImageFileResult = imageService.resolvePathToSourceImageFile(
-//       TEST_IMAGE_BASE_DIRECTORY,
-//       TEST_IMAGE_PATH
-//                                                                          );
+TEST(SourceImageFile, resolveWithinBaseDirectory_fileNotFound) {
+  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TEST_IMAGE_BASE_DIRECTORY, "not-there.bmp");
 
-//   ASSERT_TRUE(sourceImageFileResult);
-// }
+  const auto sourceImageFile = std::move(sourceImageFileResult.first);
+  const auto status = sourceImageFileResult.second;
 
-// TEST(ImageService, resolvePathToSourceImageFile_fileNotFound) {
-//   const ImageService imageService;
+  ASSERT_EQ(SOURCE_IMAGE_FILE_RESOLVE_STATUS::FAILURE_FILE_NOT_FOUND, status);
+}
 
-//   auto sourceImageFileResult = imageService.resolvePathToSourceImageFile(
-//       TEST_IMAGE_BASE_DIRECTORY,
-//       "not-there.jpg"
-//                                                                          );
+TEST(ImageService, resizeImage) {
+  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TEST_IMAGE_BASE_DIRECTORY, TEST_IMAGE_RELATIVE_PATH);
 
-//   ASSERT_FALSE(sourceImageFileResult);
-// }
+  auto sourceImageFile = std::move(sourceImageFileResult.first);
 
-// TEST(ImageService, resizeImage) {
-//   const ImageService imageService;
+  const ImageService imageService;
 
-//   auto sourceImageFileResult = imageService.resolvePathToSourceImageFile(
-//       TEST_IMAGE_BASE_DIRECTORY,
-//       TEST_IMAGE_PATH
-//                                                                          );
-
-//   imageService.resizeImage(
-//       std::move(sourceImageFileResult.value()),
-//       std::make_tuple(100, 100)
-//                                          );
-// }
+  imageService.resizeImage(
+      std::move(sourceImageFileResult.first),
+      std::make_pair(100, 100)
+                                         );
+}
 
 GTEST_API_ int main(int argc, char **argv) {
   testing::InitGoogleTest(&argc, argv);
