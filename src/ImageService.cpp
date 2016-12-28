@@ -17,7 +17,10 @@ void ImageService::resizeImage(
   inputImage= cv::imread(fullPath);
 
   cv::Mat outputImage;
-  cv::Size outputImageSize((int) imageSize.first, (int) imageSize.second);
+  cv::Size outputImageSize(
+      static_cast<int>(imageSize.first),
+      static_cast<int>(imageSize.second)
+                           );
 
   // @TODO when downsampling use INTER_CUBIC
   cv::resize(inputImage, outputImage, outputImageSize, cv::INTER_LINEAR);
