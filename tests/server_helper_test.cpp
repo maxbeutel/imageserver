@@ -7,8 +7,8 @@
 TEST(uri_to_path, success) {
   auto result = uri_to_path("/foo/bar/");
 
-  auto path = std::get<0>(result);
-  auto status = std::get<1>(result);
+  auto path = result.first;
+  auto status = result.second;
 
   ASSERT_EQ(URI_TO_PATH_STATUS::SUCCESS, status);
   ASSERT_STREQ(path.c_str(), "/foo/bar/");
@@ -17,8 +17,8 @@ TEST(uri_to_path, success) {
 TEST(uri_to_path, uriAsEmptyStringFails) {
   auto result = uri_to_path(" ");
 
-  auto path = std::get<0>(result);
-  auto status = std::get<1>(result);
+  auto path = result.first;
+  auto status = result.second;
 
   ASSERT_EQ(URI_TO_PATH_STATUS::FAILURE_URI_PARSE, status);
   ASSERT_STREQ(path.c_str(), "");
@@ -27,8 +27,8 @@ TEST(uri_to_path, uriAsEmptyStringFails) {
 TEST(uri_to_path, slashOnlySuccess) {
   auto result = uri_to_path("/");
 
-  auto path = std::get<0>(result);
-  auto status = std::get<1>(result);
+  auto path = result.first;
+  auto status = result.second;
 
   ASSERT_EQ(URI_TO_PATH_STATUS::SUCCESS, status);
   ASSERT_STREQ(path.c_str(), "/");

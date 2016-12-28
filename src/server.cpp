@@ -19,6 +19,8 @@
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
 
+// @FIXME use server helper
+// @FIXME use global libevent cleanup http://www.wangafu.net/~nickm/libevent-book/Ref1_libsetup.html
 enum URI_TO_PATH_STATUS {
   EMPTY = -1,
   SUCCESS = 0,

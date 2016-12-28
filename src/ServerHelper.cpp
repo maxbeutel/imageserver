@@ -21,7 +21,7 @@
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
 
-std::tuple<std::string, URI_TO_PATH_STATUS> uri_to_path(const char *uri) {
+std::pair<std::string, URI_TO_PATH_STATUS> uri_to_path(const char *uri) {
   assert(uri != NULL);
 
   struct evhttp_uri *decodedUri = NULL;
@@ -58,7 +58,7 @@ end:
 
   // @FIXME does path need to be free'ed when decodedPath fails?
 
-  auto result = std::make_tuple(
+  auto result = std::make_pair(
       (status == URI_TO_PATH_STATUS::SUCCESS ? std::string(decodedPath) : std::string("")),
       status
                          );

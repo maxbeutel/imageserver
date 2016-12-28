@@ -1,10 +1,14 @@
 #pragma once
 
 #include <memory>
+#include <utility>
 
-#include "ImageRequest.hpp"
+#include "SourceImageFile.hpp"
+
+typedef std::pair<unsigned int, unsigned int> ImageSize;
 
 class ImageService {
  public:
-  void cropImage(std::unique_ptr<ImageRequest> imageRequest) const;
+  ImageService();
+  void resizeImage(std::unique_ptr<SourceImageFile> sourceImageFile, ImageSize imageSize) const;
 };

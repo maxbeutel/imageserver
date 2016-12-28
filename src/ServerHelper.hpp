@@ -1,7 +1,7 @@
 #pragma once
 
 #include <string>
-#include <tuple>
+#include <utility>
 #include <cstdint>
 
 enum class URI_TO_PATH_STATUS : std::int8_t {
@@ -11,4 +11,4 @@ enum class URI_TO_PATH_STATUS : std::int8_t {
   FAILURE_PATH_DECODE,
 };
 
-std::tuple<std::string, URI_TO_PATH_STATUS> uri_to_path(const char *uri);
+std::pair<std::string, URI_TO_PATH_STATUS> uri_to_path(const char *uri);
