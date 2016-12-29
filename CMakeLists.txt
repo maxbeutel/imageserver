@@ -36,16 +36,17 @@ set(CTEST_MEMORYCHECK_COMMAND_OPTIONS, "--trace-children=yes --leak-check=full")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # server executable
-add_executable(server src/server.cpp)
-target_link_libraries(server event_custom) # @FIXME this should be passed in via variable?
+add_executable(imageserver src/server.cpp)
+target_link_libraries(imageserver ${LIBEVENT_NAME})
+target_link_libraries(imageserver server)
 
-# server helper module (@FIXME not used in server yet!)
-set(libServerHelperSources
+# server module
+set(libServerSources
     src/ServerHelper.cpp
 )
 
-add_library(server_helper SHARED ${libServerHelperSources})
-target_link_libraries(server_helper event_custom) # @FIXME this should be passed in via variable?
+add_library(server SHARED ${libServerSources})
+target_link_libraries(server ${LIBEVENT_NAME})
 
 # image module
 set(libImageSources
@@ -56,13 +57,13 @@ set(libImageSources
 add_library(image SHARED ${libImageSources})
 target_link_libraries(image opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_highgui opencv_imgcodecs opencv_imgproc opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_video opencv_videoio opencv_videostab)
 
-# test - server helper module
-add_executable(server_helper_test tests/server_helper_test.cpp)
-add_test(server_helper_test server_helper_test)
+# test - server module
+add_executable(server_test tests/server_test.cpp)
+add_test(server_test server_test)
 
-target_link_libraries(server_helper_test server_helper)
-target_link_libraries(server_helper_test gmock)
-target_link_libraries(server_helper_test gtest)
+target_link_libraries(server_test server)
+target_link_libraries(server_test gmock)
+target_link_libraries(server_test gtest)
 
 # test - image module
 add_executable(image_test tests/image_test.cpp)

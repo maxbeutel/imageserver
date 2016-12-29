@@ -10,8 +10,6 @@
 #include <sys/socket.h>
 #include <signal.h>
 #include <fcntl.h>
-#include <unistd.h>
-#include <dirent.h>
 
 #include <event2/event.h>
 #include <event2/http.h>
@@ -19,60 +17,7 @@
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
 
-// @FIXME use server helper
-// @FIXME use global libevent cleanup http://www.wangafu.net/~nickm/libevent-book/Ref1_libsetup.html
-enum URI_TO_PATH_STATUS {
-  EMPTY = -1,
-  SUCCESS = 0,
-  FAILURE_URI_PARSE,
-  FAILURE_URI_TO_PATH,
-  FAILURE_PATH_DECODE,
-};
-
-static std::string uri_to_path(const char *uri, URI_TO_PATH_STATUS *status) {
-  assert(uri != NULL);
-  assert(status != NULL);
-
-  struct evhttp_uri *decodedUri = NULL;
-  const char *path = NULL;
-  const char *decodedPath = NULL;
-
-  *status = SUCCESS;
-
-  decodedUri = evhttp_uri_parse(uri);
-
-  if (!decodedUri) {
-    *status = FAILURE_URI_PARSE;
-    goto end;
-  }
-
-  path = evhttp_uri_get_path(decodedUri);
-
-  if (!path) {
-    *status = FAILURE_URI_TO_PATH;
-    goto end;
-  }
-
-  decodedPath = evhttp_uridecode(path, 0, NULL);
-
-  if (!decodedPath) {
-    *status = FAILURE_PATH_DECODE;
-    goto end;
-  }
-
-end:
-  if (decodedUri) {
-    evhttp_uri_free(decodedUri);
-  }
-
-  // @FIXME does path need to be free'ed when decodedPath fails?
-
-  if (*status != SUCCESS) {
-    return std::string("");
-  }
-
-  return std::string(decodedPath);
-}
+#include "ServerHelper.hpp"
 
 static void handle_file(struct evhttp_request *req, void *arg)
 {
@@ -86,9 +31,11 @@ static void handle_file(struct evhttp_request *req, void *arg)
 
   std::cout << "GET " << uri << std::endl;
 
-  URI_TO_PATH_STATUS status = EMPTY;
-  auto path = uri_to_path(uri, &status);
-  assert(status == SUCCESS); // @FIXME could throw exception here, also check if string is empty!
+  auto uriToPathResult = uri_to_path(uri);
+
+  auto path = uriToPathResult.first;
+  auto status = uriToPathResult.second;
+  assert(status == URI_TO_PATH_STATUS::SUCCESS && "Very optimistically only expecting successful parsing for now.");
 
   std::cout << "Got decoded path " << path << std::endl;
 

@@ -55,7 +55,7 @@ TEST(ImageService, cropImage) {
   imageService.cropImage(
       std::move(sourceImageFileResult.first),
       std::make_pair(100, 100)
-                                         );
+                         );
 }
 
 GTEST_API_ int main(int argc, char **argv) {
