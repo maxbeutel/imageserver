@@ -39,6 +39,7 @@ include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_executable(imageserver src/server.cpp)
 target_link_libraries(imageserver ${LIBEVENT_NAME})
 target_link_libraries(imageserver server)
+target_link_libraries(imageserver image)
 
 # server module
 set(libServerSources
