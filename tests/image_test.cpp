@@ -27,35 +27,20 @@ TEST(SourceImageFile, resolveWithinBaseDirectory_fileNotFound) {
   ASSERT_EQ(SOURCE_IMAGE_FILE_RESOLVE_STATUS::FAILURE_FILE_NOT_FOUND, status);
 }
 
-TEST(SourceImageFile, readContents) {
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
-
-  auto sourceImageFile = std::move(sourceImageFileResult.first);
-  auto contents = sourceImageFile->readContents();
-
-  ASSERT_EQ(static_cast<std::vector<char>::size_type>(4515), contents.size());
-}
-
 TEST(ImageService, resizeImage) {
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
+  cv::Mat inputImage;
+  inputImage = cv::imread(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME);
 
   const ImageService imageService;
-
-  imageService.resizeImage(
-      std::move(sourceImageFileResult.first),
-      std::make_pair(100, 100)
-                                         );
+  imageService.resizeImage(inputImage, std::make_pair(100, 100));
 }
 
 TEST(ImageService, cropImage) {
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
+  cv::Mat inputImage;
+  inputImage = cv::imread(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME);
 
   const ImageService imageService;
-
-  imageService.cropImage(
-      std::move(sourceImageFileResult.first),
-      std::make_pair(100, 100)
-                         );
+  imageService.cropImage(inputImage, std::make_pair(100, 100));
 }
 
 GTEST_API_ int main(int argc, char **argv) {

@@ -1,18 +1,19 @@
 #include "ImageService.hpp"
 
-#include "opencv2/opencv.hpp"
-
 ImageService::ImageService()
 {
 }
 
-void ImageService::resizeImage(std::unique_ptr<SourceImageFile> sourceImageFile, ImageSize imageSize) const
+void ImageService::processImage(std::unique_ptr<SourceImageFile> sourceImageFile) const
 {
-  auto fullPath = sourceImageFile->getFullPath();
+  // @FIXME load sourceImageFile here, pass to resize/etc. functions based on specifications
+  // dump image again
+  // resize/crop must be changed to have cv mat as first image (move them to lower level later?)
+  // How to return a meaningful result to the caller? string? or object?
+}
 
-  cv::Mat inputImage;
-  inputImage = cv::imread(fullPath);
-
+void ImageService::resizeImage(cv::Mat &inputImage, ImageSize imageSize) const
+{
   cv::Mat outputImage;
   cv::Size outputImageSize(static_cast<int>(imageSize.first), static_cast<int>(imageSize.second));
 
@@ -25,16 +26,8 @@ void ImageService::resizeImage(std::unique_ptr<SourceImageFile> sourceImageFile,
   cv::imwrite("/tmp/imageserver-resized.png", outputImage); // @FIXME image extension should be kept!
 }
 
-void ImageService::cropImage(std::unique_ptr<SourceImageFile> sourceImageFile, ImageSize imageSize) const
+void ImageService::cropImage(cv::Mat &inputImage, ImageSize imageSize) const
 {
-  auto fullPath = sourceImageFile->getFullPath();
-
-  cv::Mat inputImage;
-  inputImage = cv::imread(fullPath);
-
-  // cv::Mat outputImage;
-  // cv::Size outputImageSize(static_cast<int>(imageSize.first), static_cast<int>(imageSize.second));
-
   // @TODO that should be configurable
   // @TODO return result to the client
   // @TODO any exceptions that need to be captured?

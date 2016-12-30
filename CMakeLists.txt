@@ -35,6 +35,10 @@ set(CTEST_MEMORYCHECK_COMMAND_OPTIONS, "--trace-children=yes --leak-check=full")
 
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
+# global variables
+set(libOpenCVLibraries
+  opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_highgui opencv_imgcodecs opencv_imgproc opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_video opencv_videoio opencv_videostab)
+
 # server executable
 add_executable(imageserver src/server.cpp)
 target_link_libraries(imageserver ${LIBEVENT_NAME})
@@ -56,7 +60,8 @@ set(libImageSources
 )
 
 add_library(image SHARED ${libImageSources})
-target_link_libraries(image opencv_calib3d opencv_core opencv_features2d opencv_flann opencv_highgui opencv_imgcodecs opencv_imgproc opencv_ml opencv_objdetect opencv_photo opencv_shape opencv_stitching opencv_superres opencv_video opencv_videoio opencv_videostab)
+# @FIXME create variable for storing opencv lib names
+target_link_libraries(image ${libOpenCVLibraries})
 
 # test - server module
 add_executable(server_test tests/server_test.cpp)
@@ -70,6 +75,8 @@ target_link_libraries(server_test gtest)
 add_executable(image_test tests/image_test.cpp)
 add_test(image_test image_test)
 
+# @FIXME create variable for storing opencv lib names
+target_link_libraries(image ${libOpenCVLibraries})
 target_link_libraries(image_test image)
 target_link_libraries(image_test gmock)
 target_link_libraries(image_test gtest)

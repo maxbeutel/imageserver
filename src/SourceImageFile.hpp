@@ -16,7 +16,6 @@ class SourceImageFile {
   static std::pair<std::unique_ptr<SourceImageFile>, SOURCE_IMAGE_FILE_RESOLVE_STATUS> resolveWithinBaseDirectory(std::string baseDirectory, std::string fileName);
 
   std::string getFullPath() const;
-  std::vector<char> readContents() const;
 
  private:
   const std::string fullPath;
