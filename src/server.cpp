@@ -46,13 +46,23 @@ static void handle_file(struct evhttp_request *req, void *)
 
   auto sourceImageFile = std::move(sourceImageFileResult.first);
 
+  // @FIXME create some algorithm for writing output image
+  // @FIXME implement LRU for caching? how to purge cache when config changed? or don't implement caching
+  // at this level and rely on reverse proxy?
+  std::string outputFilePath("/tmp/served-resized.png");
+
   std::cout << "Full path " << sourceImageFile->getFullPath() << std::endl;
 
-  int fd = open(sourceImageFile->getFullPath().c_str(), O_RDONLY);
+  ImageService imageService;
+  imageService.processImage(std::move(sourceImageFile), outputFilePath);
+
+  // @FIXME instead of opening and writing a tmp file in process image,
+  // then opening it again, it would be better if we could operate on
+  // the same handle all the time
+  int fd = open(outputFilePath.c_str(), O_RDONLY);
   assert(fd != -1);
 
   struct stat st;
-
   int s = fstat(fd, &st);
   assert(s == 0);
 

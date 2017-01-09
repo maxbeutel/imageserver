@@ -34,6 +34,54 @@ TEST(uri_to_path, slashOnlySuccess) {
   ASSERT_STREQ(path.c_str(), "/");
 }
 
+TEST(get_path_part_at, pathAtIndexZero) {
+  std::string path("/foo/bar/baz");
+
+  auto result = get_path_part_at(path, 0);
+
+  auto pathPart = result.first;
+  auto status = result.second;
+
+  ASSERT_EQ(status, true);
+  ASSERT_STREQ(pathPart.c_str(), "foo");
+}
+
+TEST(get_path_part_at, pathAtLastIndex) {
+  std::string path("/foo/bar/baz");
+
+  auto result = get_path_part_at(path, 2);
+
+  auto pathPart = result.first;
+  auto status = result.second;
+
+  ASSERT_EQ(status, true);
+  ASSERT_STREQ(pathPart.c_str(), "baz");
+}
+
+TEST(get_path_part_at, pathAtIndex) {
+  std::string path("/foo/bar/baz");
+
+  auto result = get_path_part_at(path, 1);
+
+  auto pathPart = result.first;
+  auto status = result.second;
+
+  ASSERT_EQ(status, true);
+  ASSERT_STREQ(pathPart.c_str(), "bar");
+}
+
+TEST(get_path_part_at, indexOutOfRange) {
+  std::string path("/foo/bar/baz");
+
+  auto result = get_path_part_at(path, 4);
+
+  auto pathPart = result.first;
+  auto status = result.second;
+
+  ASSERT_EQ(status, false);
+}
+
+
 GTEST_API_ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

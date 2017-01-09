@@ -12,3 +12,5 @@ enum class URI_TO_PATH_STATUS : std::int8_t {
 };
 
 std::pair<std::string, URI_TO_PATH_STATUS> uri_to_path(const char *uri);
+
+std::pair<std::string, bool> get_path_part_at(const std::string &path, const unsigned int index);

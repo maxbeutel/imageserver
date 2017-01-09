@@ -27,6 +27,13 @@ TEST(SourceImageFile, resolveWithinBaseDirectory_fileNotFound) {
   ASSERT_EQ(SOURCE_IMAGE_FILE_RESOLVE_STATUS::FAILURE_FILE_NOT_FOUND, status);
 }
 
+TEST(ImageService, processImage) {
+  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
+
+  const ImageService imageService;
+  imageService.processImage(std::move(sourceImageFileResult.first), "/tmp/test.png");
+}
+
 TEST(ImageService, resizeImage) {
   cv::Mat inputImage;
   inputImage = cv::imread(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME);

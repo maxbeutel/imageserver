@@ -1,6 +1,9 @@
 #include "ServerHelper.hpp"
 
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <vector>
 
 #include <assert.h>
 #include <stdio.h>
@@ -66,4 +69,28 @@ end:
   free((void *)decodedPath);
 
   return result;
+}
+
+std::pair<std::string, bool> get_path_part_at(const std::string &path, const unsigned int index)
+{
+  std::stringstream ss;
+  ss.str(path);
+
+  std::string item;
+
+  unsigned int i = 0;
+
+  while (std::getline(ss, item, '/')) {
+    if (item.empty()) {
+      continue;
+    }
+
+    if (i == index) {
+      return std::make_pair(item, true);
+    }
+
+    i++;
+  }
+
+  return std::make_pair("", false);
 }
