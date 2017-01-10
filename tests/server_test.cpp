@@ -1,6 +1,7 @@
 #include <stdio.h>
 
 #include "ServerHelper.hpp"
+#include "ServerConfiguration.hpp"
 
 #include "gtest/gtest.h"
 
@@ -42,7 +43,7 @@ TEST(get_path_part_at, pathAtIndexZero) {
   auto pathPart = result.first;
   auto status = result.second;
 
-  ASSERT_EQ(status, true);
+  ASSERT_TRUE(status);
   ASSERT_STREQ(pathPart.c_str(), "foo");
 }
 
@@ -54,7 +55,7 @@ TEST(get_path_part_at, pathAtLastIndex) {
   auto pathPart = result.first;
   auto status = result.second;
 
-  ASSERT_EQ(status, true);
+  ASSERT_TRUE(status);
   ASSERT_STREQ(pathPart.c_str(), "baz");
 }
 
@@ -66,7 +67,7 @@ TEST(get_path_part_at, pathAtIndex) {
   auto pathPart = result.first;
   auto status = result.second;
 
-  ASSERT_EQ(status, true);
+  ASSERT_TRUE(status);
   ASSERT_STREQ(pathPart.c_str(), "bar");
 }
 
@@ -78,9 +79,16 @@ TEST(get_path_part_at, indexOutOfRange) {
   auto pathPart = result.first;
   auto status = result.second;
 
-  ASSERT_EQ(status, false);
+  ASSERT_FALSE(status);
 }
 
+TEST(parseServerConfigurationFromStdin, emptyInput)
+{
+  auto result = parseServerConfigurationFromStdin(0, NULL);
+  auto errorMessages = result.second;
+
+  ASSERT_EQ(static_cast<int>(errorMessages.size()), 1);
+}
 
 GTEST_API_ int main(int argc, char **argv) {
     testing::InitGoogleTest(&argc, argv);

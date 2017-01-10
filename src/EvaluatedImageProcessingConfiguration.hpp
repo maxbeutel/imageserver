@@ -2,14 +2,14 @@
 
 #include <memory>
 
-class EvaluatedImageProcessingConfigurationImpl;
+class ConfigurationFileContext;
 
 class EvaluatedImageProcessingConfiguration
 {
  public:
-  static std::unique_ptr<EvaluatedImageProcessingConfiguration> createFromImpl(
-      std::unique_ptr<EvaluatedImageProcessingConfigurationImpl> const &impl
-                                                                               );
+  static std::unique_ptr<EvaluatedImageProcessingConfiguration> createFromConfigurationFileContext(
+      std::unique_ptr<ConfigurationFileContext> const &context
+                                                                                                   );
 
  private:
   explicit EvaluatedImageProcessingConfiguration();

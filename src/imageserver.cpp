@@ -1,5 +1,6 @@
 #include <iostream>
 #include <memory>
+#include <string>
 
 #include <assert.h>
 #include <fcntl.h>
@@ -12,10 +13,14 @@
 #include <event2/buffer.h>
 
 #include "ServerHelper.hpp"
+#include "ServerConfiguration.hpp"
 #include "ImageService.hpp"
 
-static void handle_file(struct evhttp_request *req, void *)
+static void handle_file(struct evhttp_request *req, void *data)
 {
+  auto serverConfiguration = static_cast<ServerConfiguration *>(data);
+  std::cout << serverConfiguration->getConfigurationFileBaseDirectory() << std::endl;
+
   const char *uri = evhttp_request_get_uri(req);
 
   // only GET requests allowed
@@ -89,7 +94,7 @@ static void handle_file(struct evhttp_request *req, void *)
   }
 }
 
-int main(int, char **argv)
+int main(int argc, char **argv)
 {
   struct event_base *base;
   struct evhttp *http;
@@ -112,8 +117,18 @@ int main(int, char **argv)
     return 1;
   }
 
-  // catchall handler
-  evhttp_set_gencb(http, handle_file, argv[1]);
+  auto result = parseServerConfigurationFromStdin(argc, argv);
+  auto serverConfiguration = std::move(result.first);
+  auto errorMessages = result.second;
+
+  if (!errorMessages.empty()) {
+    dumpErrorMessages(errorMessages, std::cerr);
+
+    return 1;
+  }
+
+  // catchall handler, pass in serverConfiguration as additional data (void *)
+  evhttp_set_gencb(http, handle_file, serverConfiguration.get());
 
   handle = evhttp_bind_socket_with_handle(http, host, port);
 
