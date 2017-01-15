@@ -1,4 +1,4 @@
-#include "EvaluatedImageProcessingConfiguration.hpp"
+#include "imageserver/image/EvaluatedImageProcessingConfiguration.hpp"
 
 
 std::unique_ptr<EvaluatedImageProcessingConfiguration> EvaluatedImageProcessingConfiguration::createFromConfigurationFileContext(

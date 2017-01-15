@@ -1,4 +1,4 @@
-#include "ConfigurationFileContext.hpp"
+#include "imageserver/image/ConfigurationFileContext.hpp"
 
 #include <stdio.h>
 

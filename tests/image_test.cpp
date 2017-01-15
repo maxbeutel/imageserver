@@ -1,10 +1,10 @@
 #include <utility>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
-#include "ImageService.hpp"
-#include "SourceImageFile.hpp"
-#include "ImageProcessingConfigurationService.hpp"
+#include "imageserver/image/ImageService.hpp"
+#include "imageserver/image/SourceImageFile.hpp"
+#include "imageserver/image/ImageProcessingConfigurationService.hpp"
 
 std::string TESTS_DIRECTORY = "";
 const std::string TEST_IMAGE_FILE_NAME("sample-image.png");

@@ -1,6 +1,6 @@
 #include <unistd.h>
 
-#include "ServerConfiguration.hpp"
+#include "imageserver/server/ServerConfiguration.hpp"
 
 ServerConfiguration::ServerConfiguration()
 {

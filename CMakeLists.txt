@@ -40,15 +40,15 @@ set(CTEST_MEMORYCHECK_COMMAND_OPTIONS, "--trace-children=yes --leak-check=full")
 include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 
 # server executable
-add_executable(imageserver src/imageserver.cpp)
+add_executable(imageserver src/imageserver/server/Server.cpp)
 target_link_libraries(imageserver ${LIBEVENT_NAME})
 target_link_libraries(imageserver server)
 target_link_libraries(imageserver image)
 
 # server module
 set(libServerSources
-  src/ServerHelper.cpp
-  src/ServerConfiguration.cpp
+  src/imageserver/server/ServerHelper.cpp
+  src/imageserver/server/ServerConfiguration.cpp
 )
 
 add_library(server SHARED ${libServerSources})
@@ -56,11 +56,11 @@ target_link_libraries(server ${LIBEVENT_NAME})
 
 # image module
 set(libImageSources
-  src/SourceImageFile.cpp
-  src/ImageService.cpp
-  src/ImageProcessingConfigurationService.cpp
-  src/EvaluatedImageProcessingConfiguration.cpp
-  src/ConfigurationFileContext.cpp
+  src/imageserver/image/SourceImageFile.cpp
+  src/imageserver/image/ImageService.cpp
+  src/imageserver/image/ImageProcessingConfigurationService.cpp
+  src/imageserver/image/EvaluatedImageProcessingConfiguration.cpp
+  src/imageserver/image/ConfigurationFileContext.cpp
 )
 
 add_library(image SHARED ${libImageSources})

@@ -2,9 +2,10 @@
 
 #include <memory>
 #include <utility>
-#include "opencv2/opencv.hpp"
 
-#include "SourceImageFile.hpp"
+#include <opencv2/opencv.hpp>
+
+#include "imageserver/image/SourceImageFile.hpp"
 
 typedef std::pair<unsigned int, unsigned int> ImageSize;
 

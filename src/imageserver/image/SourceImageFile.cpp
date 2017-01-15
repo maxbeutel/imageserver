@@ -1,7 +1,7 @@
 #include <sstream>
 #include <unistd.h>
 
-#include "SourceImageFile.hpp"
+#include "imageserver/image/SourceImageFile.hpp"
 
 SourceImageFile::SourceImageFile(const std::string fullPath)
     : fullPath{fullPath}

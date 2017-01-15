@@ -1,9 +1,9 @@
 #include <stdio.h>
 
-#include "ServerHelper.hpp"
-#include "ServerConfiguration.hpp"
+#include <gtest/gtest.h>
 
-#include "gtest/gtest.h"
+#include "imageserver/server/ServerHelper.hpp"
+#include "imageserver/server/ServerConfiguration.hpp"
 
 TEST(uri_to_path, success) {
   auto result = uri_to_path("/foo/bar/");

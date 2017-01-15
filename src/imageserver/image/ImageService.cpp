@@ -1,4 +1,4 @@
-#include "ImageService.hpp"
+#include "imageserver/image/ImageService.hpp"
 
 ImageService::ImageService()
 {

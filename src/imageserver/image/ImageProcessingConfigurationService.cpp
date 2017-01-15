@@ -3,8 +3,8 @@
 
 #include <lua5.3/lua.hpp>
 
-#include "ImageProcessingConfigurationService.hpp"
-#include "ConfigurationFileContext.hpp"
+#include "imageserver/image/ImageProcessingConfigurationService.hpp"
+#include "imageserver/image/ConfigurationFileContext.hpp"
 
 typedef int (ConfigurationFileContext::*mem_func)(lua_State * L);
 

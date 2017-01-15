@@ -5,7 +5,7 @@
 #include <string>
 #include <iostream>
 
-#include "EvaluatedImageProcessingConfiguration.hpp"
+#include "imageserver/image/EvaluatedImageProcessingConfiguration.hpp"
 
 class ImageProcessingConfigurationService {
  public:

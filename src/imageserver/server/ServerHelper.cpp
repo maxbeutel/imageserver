@@ -1,5 +1,3 @@
-#include "ServerHelper.hpp"
-
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -23,6 +21,8 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
+
+#include "imageserver/server/ServerHelper.hpp"
 
 std::pair<std::string, URI_TO_PATH_STATUS> uri_to_path(const char *uri) {
   assert(uri != NULL);

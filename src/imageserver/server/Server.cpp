@@ -12,9 +12,9 @@
 #include <event2/http.h>
 #include <event2/buffer.h>
 
-#include "ServerHelper.hpp"
-#include "ServerConfiguration.hpp"
-#include "ImageService.hpp"
+#include "imageserver/server/ServerHelper.hpp"
+#include "imageserver/server/ServerConfiguration.hpp"
+#include "imageserver/image/ImageService.hpp"
 
 static void handle_file(struct evhttp_request *req, void *data)
 {
