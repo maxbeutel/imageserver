@@ -96,6 +96,16 @@ static void handle_file(struct evhttp_request *req, void *data)
 
 int main(int argc, char **argv)
 {
+  auto result = parseServerConfigurationFromStdin(argc, argv);
+  auto serverConfiguration = std::move(result.first);
+  auto errorMessages = result.second;
+
+  if (!errorMessages.empty()) {
+    dumpErrorMessages(errorMessages, std::cerr);
+
+    return 1;
+  }
+
   struct event_base *base;
   struct evhttp *http;
   struct evhttp_bound_socket *handle;
@@ -114,16 +124,6 @@ int main(int argc, char **argv)
 
   if (!http) {
     std::cerr << "FAILURE: Couldn't create an evhttp." << std::endl;
-    return 1;
-  }
-
-  auto result = parseServerConfigurationFromStdin(argc, argv);
-  auto serverConfiguration = std::move(result.first);
-  auto errorMessages = result.second;
-
-  if (!errorMessages.empty()) {
-    dumpErrorMessages(errorMessages, std::cerr);
-
     return 1;
   }
 
