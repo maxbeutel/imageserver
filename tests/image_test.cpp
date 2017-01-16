@@ -3,33 +3,13 @@
 #include <gtest/gtest.h>
 
 #include "imageserver/image/ImageService.hpp"
-#include "imageserver/image/SourceImageFile.hpp"
 #include "imageserver/image/ImageProcessingConfigurationService.hpp"
 
 std::string TESTS_DIRECTORY = "";
 const std::string TEST_IMAGE_FILE_NAME("sample-image.png");
 
-TEST(SourceImageFile, resolveWithinBaseDirectory) {
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
-
-  const auto sourceImageFile = std::move(sourceImageFileResult.first);
-  const auto status = sourceImageFileResult.second;
-
-  ASSERT_EQ(SOURCE_IMAGE_FILE_RESOLVE_STATUS::SUCCESS, status);
-  ASSERT_STREQ(sourceImageFile->getFullPath().c_str(), std::string(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME).c_str());
-}
-
-TEST(SourceImageFile, resolveWithinBaseDirectory_fileNotFound) {
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", "not-there.bmp");
-
-  const auto sourceImageFile = std::move(sourceImageFileResult.first);
-  const auto status = sourceImageFileResult.second;
-
-  ASSERT_EQ(SOURCE_IMAGE_FILE_RESOLVE_STATUS::FAILURE_FILE_NOT_FOUND, status);
-}
-
 TEST(ImageService, processImage) {
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
+  auto sourceImageFileResult = ResolvedFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
 
   const ImageService imageService;
   imageService.processImage(std::move(sourceImageFileResult.first), "/tmp/test.png");
@@ -58,7 +38,7 @@ TEST(ImageProcessingConfigurationService, evaluateConfigurationFile_dumpingParam
   ImageProcessingConfigurationService configurationService;
 
   auto configuration = configurationService.evaluateConfigurationFile(
-      "/tmp/bla.lua",
+      TESTS_DIRECTORY + "/fixtures/dump-parameters.lua",
       parameters,
       ss
                                                                       );
@@ -72,7 +52,7 @@ TEST(ImageProcessingConfigurationService, evaluateConfigurationFile_emptyParamet
   ImageProcessingConfigurationService configurationService;
 
   auto configuration = configurationService.evaluateConfigurationFile(
-      "/tmp/bla.lua",
+      TESTS_DIRECTORY + "/fixtures/dump-parameters.lua",
       parameters,
       ss
                                                                       );

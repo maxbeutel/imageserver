@@ -4,7 +4,7 @@ ImageService::ImageService()
 {
 }
 
-void ImageService::processImage(const std::unique_ptr<SourceImageFile> sourceImageFile, const std::string outputFilePath) const
+void ImageService::processImage(const std::unique_ptr<ResolvedFile> sourceImageFile, const std::string outputFilePath) const
 {
   cv::Mat inputImage;
   inputImage = cv::imread(sourceImageFile->getFullPath());

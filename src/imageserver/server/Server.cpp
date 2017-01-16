@@ -18,16 +18,13 @@
 
 static void handle_file(struct evhttp_request *req, void *data)
 {
-  auto serverConfiguration = static_cast<ServerConfiguration *>(data);
-  std::cout << serverConfiguration->getConfigurationFileBaseDirectory() << std::endl;
-
-  const char *uri = evhttp_request_get_uri(req);
-
-  // only GET requests allowed
   if (evhttp_request_get_command(req) != EVHTTP_REQ_GET) {
     evhttp_send_error(req, HTTP_BADREQUEST, 0);
     return;
   }
+
+  const auto serverConfiguration = static_cast<ServerConfiguration *>(data);
+  const char *uri = evhttp_request_get_uri(req);
 
   std::cout << "GET " << uri << std::endl;
 
@@ -37,19 +34,21 @@ static void handle_file(struct evhttp_request *req, void *data)
 
   std::cout << "Got decoded path " << path << std::endl;
 
-  //resolveWithinBaseDirectory
   // @FIXME this is very insecure code! Can inject any path
   // @FIXME double slashes occur when concatenating paths
-  auto sourceImageFileResult = SourceImageFile::resolveWithinBaseDirectory("/tmp", path);
+  auto sourceImageFileResult = ResolvedFile::resolveWithinBaseDirectory("/tmp", path);
 
-  if (sourceImageFileResult.second != SOURCE_IMAGE_FILE_RESOLVE_STATUS::SUCCESS) {
+  if (sourceImageFileResult.second != RESOLVED_FILE_RESOLVE_STATUS::SUCCESS) {
     std::cout << "File not found" << std::endl;
-
     evhttp_send_error(req, HTTP_NOTFOUND, 0);
+
     return;
   }
 
   auto sourceImageFile = std::move(sourceImageFileResult.first);
+  // auto filterConfiguration = loadFilterConfiguration(sourceImageFile, "path/to/configuration.lua");
+  // auto filterResult = imageService.filterImage(filterConfiguration, sourceImageFile);
+  //evbuffer_add(evb, filterResult->data_ptr(), filterResult->data_ptr_len());
 
   // @FIXME create some algorithm for writing output image
   // @FIXME implement LRU for caching? how to purge cache when config changed? or don't implement caching

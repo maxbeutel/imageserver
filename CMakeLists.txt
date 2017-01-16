@@ -44,6 +44,7 @@ add_executable(imageserver src/imageserver/server/Server.cpp)
 target_link_libraries(imageserver ${LIBEVENT_NAME})
 target_link_libraries(imageserver server)
 target_link_libraries(imageserver image)
+target_link_libraries(imageserver filesystem)
 
 # server module
 set(libServerSources
@@ -53,10 +54,17 @@ set(libServerSources
 
 add_library(server SHARED ${libServerSources})
 target_link_libraries(server ${LIBEVENT_NAME})
+target_link_libraries(server filesystem)
+
+# filesystem module
+set(libFilesystemSources
+  src/imageserver/filesystem/ResolvedFile.cpp
+)
+
+add_library(filesystem SHARED ${libFilesystemSources})
 
 # image module
 set(libImageSources
-  src/imageserver/image/SourceImageFile.cpp
   src/imageserver/image/ImageService.cpp
   src/imageserver/image/ImageProcessingConfigurationService.cpp
   src/imageserver/image/EvaluatedImageProcessingConfiguration.cpp
@@ -66,6 +74,7 @@ set(libImageSources
 add_library(image SHARED ${libImageSources})
 target_link_libraries(image ${OpenCV_LIBS})
 target_link_libraries(image ${LIBLUA_NAME})
+target_link_libraries(image filesystem)
 
 # test - server module
 add_executable(server_test tests/server_test.cpp)
@@ -74,6 +83,15 @@ add_test(server_test server_test)
 target_link_libraries(server_test server)
 target_link_libraries(server_test gmock)
 target_link_libraries(server_test gtest)
+
+# test - filesystem module
+add_executable(filesystem_test tests/filesystem_test.cpp)
+add_test(filesystem_test filesystem_test)
+
+target_link_libraries(filesystem ${libOpenCVLibraries})
+target_link_libraries(filesystem_test filesystem)
+target_link_libraries(filesystem_test gmock)
+target_link_libraries(filesystem_test gtest)
 
 # test - image module
 add_executable(image_test tests/image_test.cpp)
