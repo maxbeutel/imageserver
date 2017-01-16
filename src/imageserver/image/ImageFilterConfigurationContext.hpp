@@ -2,10 +2,10 @@
 
 #include <lua5.3/lua.hpp>
 
-class ConfigurationFileContext
+class ImageFilterConfigurationContext
 {
  public:
-  ConfigurationFileContext();
+  ImageFilterConfigurationContext();
 
   int resizeImage(lua_State *L);
   int cropImage(lua_State *L);

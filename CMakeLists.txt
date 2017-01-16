@@ -66,9 +66,8 @@ add_library(filesystem SHARED ${libFilesystemSources})
 # image module
 set(libImageSources
   src/imageserver/image/ImageService.cpp
-  src/imageserver/image/ImageProcessingConfigurationService.cpp
-  src/imageserver/image/EvaluatedImageProcessingConfiguration.cpp
-  src/imageserver/image/ConfigurationFileContext.cpp
+  src/imageserver/image/ImageFilterService.cpp
+  src/imageserver/image/ImageFilterConfigurationContext.cpp
 )
 
 add_library(image SHARED ${libImageSources})

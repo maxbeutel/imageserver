@@ -3,7 +3,6 @@
 #include <gtest/gtest.h>
 
 #include "imageserver/filesystem/ResolvedFile.hpp"
-#include "imageserver/image/ImageProcessingConfigurationService.hpp"
 
 std::string TESTS_DIRECTORY = "";
 const std::string TEST_IMAGE_FILE_NAME("sample-image.png");
