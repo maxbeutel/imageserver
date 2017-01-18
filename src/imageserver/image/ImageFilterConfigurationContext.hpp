@@ -15,12 +15,14 @@ class ImageFilterConfigurationContext
  private:
   const std::unique_ptr<ImageService> imageService;
   const ResolvedFile image;
+
+  // can't be const because assigned in loadImage method :-|
   cv::Mat inputImage;
 
  public:
   ImageFilterConfigurationContext(
       std::unique_ptr<ImageService> imageService,
-      const ResolvedFile &image
+      const ResolvedFile image
                                   );
 
   int loadImage(lua_State *L);
@@ -28,4 +30,5 @@ class ImageFilterConfigurationContext
   int getImageHeight(lua_State *L);
   int resizeImage(lua_State *L);
   int cropImage(lua_State *L);
+  int writeImage(lua_State *L);
 };

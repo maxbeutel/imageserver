@@ -37,6 +37,7 @@ void ImageFilterService::filterImage(
   lua_register(L, "image_get_height", &dispatch<&ImageFilterConfigurationContext::getImageHeight>);
   lua_register(L, "image_resize", &dispatch<&ImageFilterConfigurationContext::resizeImage>);
   lua_register(L, "image_crop", &dispatch<&ImageFilterConfigurationContext::cropImage>);
+  lua_register(L, "image_write", &dispatch<&ImageFilterConfigurationContext::writeImage>);
 
   status = luaL_loadfile(L, configurationFile.getFullPath().c_str());
 
