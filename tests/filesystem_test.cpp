@@ -14,7 +14,7 @@ TEST(ResolvedFile, resolveWithinBaseDirectory) {
   const auto status = sourceImageFileResult.second;
 
   ASSERT_EQ(RESOLVED_FILE_RESOLVE_STATUS::SUCCESS, status);
-  ASSERT_STREQ(sourceImageFile->getFullPath().c_str(), std::string(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME).c_str());
+  ASSERT_STREQ(sourceImageFile.getFullPath().c_str(), std::string(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME).c_str());
 }
 
 TEST(ResolvedFile, resolveWithinBaseDirectory_fileNotFound) {

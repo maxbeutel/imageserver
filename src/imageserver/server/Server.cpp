@@ -55,7 +55,7 @@ static void handle_file(struct evhttp_request *req, void *data)
   // at this level and rely on reverse proxy?
   std::string outputFilePath("/tmp/served-resized.png");
 
-  std::cout << "Full path " << sourceImageFile->getFullPath() << std::endl;
+  std::cout << "Full path " << sourceImageFile.getFullPath() << std::endl;
 
   ImageService imageService;
   // @TODO do something meaningful here
