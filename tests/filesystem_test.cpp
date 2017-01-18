@@ -10,7 +10,7 @@ const std::string TEST_IMAGE_FILE_NAME("sample-image.png");
 TEST(ResolvedFile, resolveWithinBaseDirectory) {
   auto sourceImageFileResult = ResolvedFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
 
-  const auto sourceImageFile = std::move(sourceImageFileResult.first);
+  const auto sourceImageFile = sourceImageFileResult.first;
   const auto status = sourceImageFileResult.second;
 
   ASSERT_EQ(RESOLVED_FILE_RESOLVE_STATUS::SUCCESS, status);
@@ -20,7 +20,7 @@ TEST(ResolvedFile, resolveWithinBaseDirectory) {
 TEST(ResolvedFile, resolveWithinBaseDirectory_fileNotFound) {
   auto sourceImageFileResult = ResolvedFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", "not-there.bmp");
 
-  const auto sourceImageFile = std::move(sourceImageFileResult.first);
+  const auto sourceImageFile = sourceImageFileResult.first;
   const auto status = sourceImageFileResult.second;
 
   ASSERT_EQ(RESOLVED_FILE_RESOLVE_STATUS::FAILURE_FILE_NOT_FOUND, status);

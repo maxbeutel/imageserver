@@ -45,7 +45,7 @@ static void handle_file(struct evhttp_request *req, void *data)
     return;
   }
 
-  auto sourceImageFile = std::move(sourceImageFileResult.first);
+  auto sourceImageFile = sourceImageFileResult.first;
   // auto filterConfiguration = loadFilterConfiguration(sourceImageFile, "path/to/configuration.lua");
   // auto filterResult = imageService.filterImage(filterConfiguration, sourceImageFile);
   //evbuffer_add(evb, filterResult->data_ptr(), filterResult->data_ptr_len());

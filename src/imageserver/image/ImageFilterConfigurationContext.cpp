@@ -6,7 +6,7 @@ ImageFilterConfigurationContext::ImageFilterConfigurationContext(
     std::unique_ptr<ImageService> imageService,
     const ResolvedFile image
                                                                  )
-    : imageService(std::move(imageService)), image(std::move(image))
+    : imageService(std::move(imageService)), image(image)
 {
 }
 

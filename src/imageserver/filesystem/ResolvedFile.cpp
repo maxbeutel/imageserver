@@ -20,7 +20,7 @@ std::pair<ResolvedFile, RESOLVED_FILE_RESOLVE_STATUS> ResolvedFile::resolveWithi
   }
 
   ResolvedFile resolvedFile(fullPath);
-  return std::make_pair(std::move(resolvedFile), RESOLVED_FILE_RESOLVE_STATUS::SUCCESS);
+  return std::make_pair(resolvedFile, RESOLVED_FILE_RESOLVE_STATUS::SUCCESS);
 }
 
 std::string ResolvedFile::getFullPath() const
