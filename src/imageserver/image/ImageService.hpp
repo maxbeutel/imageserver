@@ -12,8 +12,9 @@ typedef std::pair<unsigned int, unsigned int> ImageSize;
 class ImageService {
  public:
   ImageService();
-  void processImage(const std::unique_ptr<ResolvedFile> sourceImageFile, const std::string outputFilePath) const;
-  // @FIXME can Mat reference be const?
+
+  ImageSize getImageSize(const cv::Mat &inputImage) const;
+  cv::Mat loadImage(const ResolvedFile &imageFile) const;
   void resizeImage(cv::Mat &inputImage, const ImageSize imageSize) const;
   void cropImage(cv::Mat &inputImage, const ImageSize imageSize) const;
 };

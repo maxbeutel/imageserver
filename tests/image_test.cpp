@@ -7,13 +7,6 @@
 std::string TESTS_DIRECTORY = "";
 const std::string TEST_IMAGE_FILE_NAME("sample-image.png");
 
-TEST(ImageService, processImage) {
-  auto sourceImageFileResult = ResolvedFile::resolveWithinBaseDirectory(TESTS_DIRECTORY + "/fixtures", TEST_IMAGE_FILE_NAME);
-
-  const ImageService imageService;
-  imageService.processImage(std::move(sourceImageFileResult.first), "/tmp/test.png");
-}
-
 TEST(ImageService, resizeImage) {
   cv::Mat inputImage;
   inputImage = cv::imread(TESTS_DIRECTORY + "/fixtures/" + TEST_IMAGE_FILE_NAME);

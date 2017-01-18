@@ -58,7 +58,7 @@ static void handle_file(struct evhttp_request *req, void *data)
   std::cout << "Full path " << sourceImageFile->getFullPath() << std::endl;
 
   ImageService imageService;
-  imageService.processImage(std::move(sourceImageFile), outputFilePath);
+  // @TODO do something meaningful here
 
   // @FIXME instead of opening and writing a tmp file in process image,
   // then opening it again, it would be better if we could operate on

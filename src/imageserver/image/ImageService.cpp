@@ -4,14 +4,14 @@ ImageService::ImageService()
 {
 }
 
-void ImageService::processImage(const std::unique_ptr<ResolvedFile> sourceImageFile, const std::string outputFilePath) const
+ImageSize ImageService::getImageSize(const cv::Mat &inputImage) const
 {
-  cv::Mat inputImage;
-  inputImage = cv::imread(sourceImageFile->getFullPath());
+  return {inputImage.size().width, inputImage.size().height};
+}
 
-  resizeImage(inputImage, { 100, 100 });
-
-  cv::imwrite(outputFilePath, inputImage);
+cv::Mat ImageService::loadImage(const ResolvedFile &imageFile) const
+{
+  return cv::imread(imageFile.getFullPath().c_str());
 }
 
 void ImageService::resizeImage(cv::Mat &inputImage, const ImageSize imageSize) const

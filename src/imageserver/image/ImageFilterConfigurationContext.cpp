@@ -2,8 +2,35 @@
 
 #include "imageserver/image/ImageFilterConfigurationContext.hpp"
 
-ImageFilterConfigurationContext::ImageFilterConfigurationContext()
+ImageFilterConfigurationContext::ImageFilterConfigurationContext(
+    std::unique_ptr<ImageService> imageService,
+    const ResolvedFile &image // @TODO need to create copy constructor for ResolvedImage?
+                                                                 )
+    : imageService(std::move(imageService)), image(image)
 {
+}
+
+int ImageFilterConfigurationContext::loadImage(lua_State *L)
+{
+  // clients are expected to call this method in the lua script
+  printf("loading image\n");
+  inputImage = imageService->loadImage(image);
+
+  return 1;
+}
+
+int ImageFilterConfigurationContext::getImageWidth(lua_State *) {
+  printf("get image width\n");
+  auto imageSize = imageService->getImageSize(inputImage);
+
+  return 1;
+}
+
+int ImageFilterConfigurationContext::getImageHeight(lua_State *) {
+  printf("get image height\n");
+  auto imageSize = imageService->getImageSize(inputImage);
+
+  return 1;
 }
 
 int ImageFilterConfigurationContext::resizeImage(lua_State *) {

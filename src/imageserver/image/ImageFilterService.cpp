@@ -18,53 +18,45 @@ ImageFilterService::ImageFilterService()
 void ImageFilterService::filterImage(
     const ResolvedFile &configurationFile,
     const ResolvedFile &image,
-    const std::map<std::string, std::string> &parameters,
-    std::ostream &configurationFileOutputStream
+    std::ostream &logOutputStream
                                      ) const
 {
-  // int status, result;
-  // lua_State *L;
+  int status, result;
+  lua_State *L;
 
-  // L = luaL_newstate();
-  // luaL_openlibs(L);
+  L = luaL_newstate();
+  luaL_openlibs(L);
 
-  // // @FIXME pass pointers to private functions here, so that clients cant see this configuration methods?
-  // auto impl = std::make_unique<ConfigurationFileContext>();
-  // *static_cast<ConfigurationFileContext**>(lua_getextraspace(L)) = impl.get();
-  // lua_register(L, "image_resize", &dispatch<&ConfigurationFileContext::resizeImage>);
-  // lua_register(L, "image_crop", &dispatch<&ConfigurationFileContext::cropImage>);
+  auto configurationFileContext = std::make_unique<ImageFilterConfigurationContext>(
+      std::make_unique<ImageService>(),
+      image
+                                                                                    );
 
-  // status = luaL_loadfile(L, configurationFileFullPath.c_str());
+  *static_cast<ImageFilterConfigurationContext**>(lua_getextraspace(L)) = configurationFileContext.get();
+  lua_register(L, "image_get_width", &dispatch<&ImageFilterConfigurationContext::getImageWidth>);
+  lua_register(L, "image_get_height", &dispatch<&ImageFilterConfigurationContext::getImageHeight>);
+  lua_register(L, "image_resize", &dispatch<&ImageFilterConfigurationContext::resizeImage>);
+  lua_register(L, "image_crop", &dispatch<&ImageFilterConfigurationContext::cropImage>);
 
-  // if (status) {
-  //   fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
-  //   // @FIXME return here, file not found
-  // }
+  status = luaL_loadfile(L, configurationFile.getFullPath().c_str());
 
-  // lua_newtable(L);
+  if (status) {
+    fprintf(stderr, "Couldn't load file: %s\n", lua_tostring(L, -1));
+    // @FIXME return here, file not found
+  }
 
-  // for (auto const &kv : parameters) {
-  //   lua_pushstring(L, kv.first.c_str());
-  //   lua_pushstring(L, kv.second.c_str());
-  //   lua_rawset(L, -3);
-  // }
+  result = lua_pcall(L, 0, LUA_MULTRET, 0);
 
-  // lua_setglobal(L, "imageData");
+  if (result) {
+    fprintf(stderr, "Failed to run script: %s\n", lua_tostring(L, -1));
+    // @FIXME return here, failed to run script, e. g. syntax error
+  }
 
-  // result = lua_pcall(L, 0, LUA_MULTRET, 0);
+  // get value that the lua script returned (if any)
+  // dumping it to the output stream, useful for debugging
+  const char *res = lua_tostring(L, -1);
+  logOutputStream << res;
 
-  // if (result) {
-  //   fprintf(stderr, "Failed to run script: %s\n", lua_tostring(L, -1));
-  //   // @FIXME return here, failed to run script, e. g. syntax error
-  // }
-
-  // // get value that the lua script returned (if any)
-  // // returning to the output stream, useful for debugging
-  // const char *res = lua_tostring(L, -1);
-  // configurationFileOutputStream << res;
-
-  // lua_pop(L, 1);
-  // lua_close(L);
-
-  // return EvaluatedImageProcessingConfiguration::createFromConfigurationFileContext(impl);
+  lua_pop(L, 1);
+  lua_close(L);
 }

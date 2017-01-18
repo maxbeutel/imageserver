@@ -1,6 +1,5 @@
 #pragma once
 
-#include <map>
 #include <memory>
 #include <string>
 #include <iostream>
@@ -16,7 +15,6 @@ class ImageFilterService {
   void filterImage(
       const ResolvedFile &configurationFile,
       const ResolvedFile &image,
-      const std::map<std::string, std::string> &parameters,
       std::ostream &configurationFileOutputStream
                    ) const;
 };
