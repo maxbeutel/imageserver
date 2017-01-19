@@ -15,7 +15,7 @@ ImageFilterService::ImageFilterService()
 {
 }
 
-void ImageFilterService::filterImage(
+FILTER_IMAGE_STATUS ImageFilterService::filterImage(
     const ResolvedFile &configurationFile,
     const ResolvedFile &image,
     std::ostream &logOutputStream
@@ -24,15 +24,16 @@ void ImageFilterService::filterImage(
   int status, result;
   lua_State *L;
 
-  L = luaL_newstate();
-  luaL_openlibs(L);
-
   auto configurationFileContext = std::make_unique<ImageFilterConfigurationContext>(
       std::make_unique<ImageService>(),
       image
                                                                                     );
 
+  L = luaL_newstate();
+  luaL_openlibs(L);
+
   *static_cast<ImageFilterConfigurationContext**>(lua_getextraspace(L)) = configurationFileContext.get();
+  lua_register(L, "image_load", &dispatch<&ImageFilterConfigurationContext::loadImage>);
   lua_register(L, "image_get_width", &dispatch<&ImageFilterConfigurationContext::getImageWidth>);
   lua_register(L, "image_get_height", &dispatch<&ImageFilterConfigurationContext::getImageHeight>);
   lua_register(L, "image_resize", &dispatch<&ImageFilterConfigurationContext::resizeImage>);
@@ -56,8 +57,13 @@ void ImageFilterService::filterImage(
   // get value that the lua script returned (if any)
   // dumping it to the output stream, useful for debugging
   const char *res = lua_tostring(L, -1);
-  logOutputStream << res;
+
+  if (res != NULL) {
+    logOutputStream << res;
+  }
 
   lua_pop(L, 1);
   lua_close(L);
+
+  return FILTER_IMAGE_STATUS::SUCCESS;
 }
